@@ -1,0 +1,136 @@
+definitions:
+  api.AmountRequest:
+    properties:
+      amount:
+        format: int64
+        type: integer
+    type: object
+  api.TransactionResult:
+    properties:
+      referenceId:
+        type: string
+      transactionId:
+        type: string
+    type: object
+  api.TransferRequest:
+    properties:
+      amount:
+        type: integer
+      from:
+        type: string
+      to:
+        type: string
+    type: object
+host: localhost:8091
+info:
+  contact:
+    email: api@evilcorp.com
+    name: API Support
+    url: https://api.evilcorp.com/support
+  description: This API was created using the Dapr SDK and is good but could be better.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  termsOfService: https://api.evilcorp.com/terms/
+  title: MegaBank Account APIs
+  version: "1.0"
+paths:
+  /accounts/v1/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the account balance by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Get the account balance
+      tags:
+      - accounts
+  /accounts/v1/{id}/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Deposit into an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Amount request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.AmountRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+      summary: Deposit into an account
+      tags:
+      - accounts
+  /accounts/v1/{id}/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Withdraw from an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Amount request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.AmountRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+      summary: Withdraw from an account
+      tags:
+      - accounts
+  /transfers/v1/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Transfer a specific amount of money from one account to another
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Transfer request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.TransferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.TransactionResult'
+      summary: Transfer a specific amount from one account to another
+      tags:
+      - transfers
+swagger: "2.0"
